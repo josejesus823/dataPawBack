@@ -1,7 +1,6 @@
 package dataPawBE.demo.models;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -13,9 +12,10 @@ public class medicalRecords {
     @Column(name="record_id")
     private Integer record_id;
 
+    // FIXED: Using the Pet entity class instead of Integer
     @ManyToOne
-    @JoinColumn(name="pet_id", referencedColumnName = "pet_id")
-    private Integer pet_id;
+    @JoinColumn(name="pet_id")
+    private Pet pet;
 
     @Column(name="record_date")
     private LocalDate record_date;
@@ -44,9 +44,9 @@ public class medicalRecords {
     public medicalRecords() {
     }
 
-    public medicalRecords(Integer record_id, Integer pet_id, LocalDate record_date, String record_type, String description, String severity, Integer vet_id, String clinic_name, String attachments_url, String notes) {
+    public medicalRecords(Integer record_id, Pet pet, LocalDate record_date, String record_type, String description, String severity, Integer vet_id, String clinic_name, String attachments_url, String notes) {
         this.record_id = record_id;
-        this.pet_id = pet_id;
+        this.pet = pet;
         this.record_date = record_date;
         this.record_type = record_type;
         this.description = description;
@@ -56,8 +56,6 @@ public class medicalRecords {
         this.attachments_url = attachments_url;
         this.notes = notes;
     }
-    
-
 
     public Integer getRecord_id() {
         return this.record_id;
@@ -67,12 +65,12 @@ public class medicalRecords {
         this.record_id = record_id;
     }
 
-    public Integer getPet_id() {
-        return this.pet_id;
+    public Pet getPet() {
+        return this.pet;
     }
 
-    public void setPet_id(Integer pet_id) {
-        this.pet_id = pet_id;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public LocalDate getRecord_date() {
@@ -138,8 +136,4 @@ public class medicalRecords {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
-
-
-
 }
