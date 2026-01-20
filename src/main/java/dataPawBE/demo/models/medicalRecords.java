@@ -29,8 +29,9 @@ public class medicalRecords {
     @Column(name="severity")
     private String severity;
 
-    @Column(name="vet_id")
-    private Integer vet_id;
+    @ManyToOne
+    @JoinColumn(name="vet_id")
+    private Vet vet;
 
     @Column(name="clinic_name")
     private String clinic_name;
@@ -44,14 +45,14 @@ public class medicalRecords {
     public medicalRecords() {
     }
 
-    public medicalRecords(Integer record_id, Pet pet, LocalDate record_date, String record_type, String description, String severity, Integer vet_id, String clinic_name, String attachments_url, String notes) {
+    public medicalRecords(Integer record_id, Pet pet, LocalDate record_date, String record_type, String description, String severity, Vet vet, String clinic_name, String attachments_url, String notes) {
         this.record_id = record_id;
         this.pet = pet;
         this.record_date = record_date;
         this.record_type = record_type;
         this.description = description;
         this.severity = severity;
-        this.vet_id = vet_id;
+        this.vet = vet;
         this.clinic_name = clinic_name;
         this.attachments_url = attachments_url;
         this.notes = notes;
@@ -105,12 +106,12 @@ public class medicalRecords {
         this.severity = severity;
     }
 
-    public Integer getVet_id() {
-        return this.vet_id;
+    public Vet getVet() {
+        return this.vet;
     }
 
-    public void setVet_id(Integer vet_id) {
-        this.vet_id = vet_id;
+    public void setVet(Vet vet) {
+        this.vet = vet;
     }
 
     public String getClinic_name() {

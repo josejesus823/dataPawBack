@@ -15,8 +15,9 @@ public class Pet {
     @Column(name="pet_id")
     private Integer petId;
 
-    @Column(name="owner_id")
-    private Integer ownerId;
+    @ManyToOne
+    @JoinColumn(name="owner_id")
+    private Owner owner;
 
     @Column(name="pet_name")
     private String petName;
@@ -43,9 +44,9 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(Integer petId, Integer ownerId, String petName, String petType, String petBreed, String petSex, String color, LocalDate dateOfBirth, Float weight, UUID codeMicroship) {
+    public Pet(Integer petId, Owner owner, String petName, String petType, String petBreed, String petSex, String color, LocalDate dateOfBirth, Float weight, UUID codeMicroship) {
         this.petId = petId;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.petName = petName;
         this.petType = petType;
         this.petBreed = petBreed;
@@ -64,12 +65,12 @@ public class Pet {
         this.petId = petId;
     }
 
-    public Integer getOwnerId() {
-        return ownerId;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setOwnerId(Integer ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 
     public String getPetName() {
