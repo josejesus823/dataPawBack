@@ -21,7 +21,7 @@ public class Owner {
     private String ownerAddress;
     @Column(name="owner_phone")
     private String ownerPhone;
-    @Column(name="owner_email")
+    @Column(name="owner_email", unique = true)
     private String ownerEmail;
     @Column(name="owner_city")
     private String ownerCity;
@@ -31,6 +31,9 @@ public class Owner {
     private Date dateOfBirth;
     @Column(name="civil_status")
     private String civilStatus;
+    @Column(name="password_hash", nullable=false)
+    private String passwordHash;
+
 
     // owner a pets
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
@@ -39,7 +42,7 @@ public class Owner {
     public Owner() {}
 
     public Owner(Integer id, String ownerName, String ownerDni, String ownerAddress, String ownerPhone,
-            String ownerEmail, String ownerCity, Float ownerSalary, Date dateOfBirth, String civilStatus,
+            String ownerEmail, String ownerCity, Float ownerSalary, Date dateOfBirth, String civilStatus, String passswordHash,
             List<Pet> pets) {
         this.id = id;
         this.ownerName = ownerName;
@@ -51,6 +54,7 @@ public class Owner {
         this.ownerSalary = ownerSalary;
         this.dateOfBirth = dateOfBirth;
         this.civilStatus = civilStatus;
+        this.passwordHash = passswordHash;
         this.pets = pets;
     }
 
@@ -130,8 +134,16 @@ public class Owner {
         return civilStatus;
     }
 
-    public void setCivilStatus(String civilStatus) {
-        this.civilStatus = civilStatus;
+    public void setCivilStatus(String passwordHash) {
+        this.passwordHash = civilStatus;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public List<Pet> getPets() {
