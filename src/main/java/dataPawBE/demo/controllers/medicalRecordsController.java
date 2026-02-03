@@ -22,5 +22,4 @@ public class medicalRecordsController {
       medicalRecords saveResponseAPI = this.medicalRecordsService.saveMedicalRecords(data);
       return ResponseEntity.status(HttpStatus.OK).body(saveResponseAPI);
     };
-
 }
