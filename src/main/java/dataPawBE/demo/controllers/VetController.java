@@ -8,19 +8,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dataPawBE.demo.models.medicalRecords;
-import dataPawBE.demo.services.MedicalRecordsService;
+import dataPawBE.demo.models.Vet;
+import dataPawBE.demo.services.VetService;
+
 
 
 @RestController
-@RequestMapping("/api/v1/medicalRecords")
-public class medicalRecordsController {
+@RequestMapping("/api/v1/vet")
+public class VetController {
     @Autowired
-    MedicalRecordsService medicalRecordsService;
+    VetService vetService;
 
     @PostMapping
-     public ResponseEntity <medicalRecords> save(@RequestBody medicalRecords data){
-      medicalRecords saveResponseAPI = this.medicalRecordsService.saveMedicalRecords(data);
+    public ResponseEntity <Vet> save(@RequestBody Vet data){
+      Vet saveResponseAPI = this.vetService.saveVet(data);
       return ResponseEntity.status(HttpStatus.OK).body(saveResponseAPI);
     };
 }
