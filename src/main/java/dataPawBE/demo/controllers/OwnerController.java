@@ -1,25 +1,35 @@
 package dataPawBE.demo.controllers;
 
-//Falta importar el OwnerService
-import dataPawBE.demo.models.Owner;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import dataPawBE.demo.dto.OwnerCreateRequest;
+import dataPawBE.demo.models.Owner;
+import dataPawBE.demo.services.OwnerService;
 
 @RestController
-@RequestMapping("/api/v1/owner")
+@RequestMapping("/api/owners")
 public class OwnerController {
-    @Autowired
-    OwnerService ownerService;
+
+    private final OwnerService service;
+
+    public OwnerController(OwnerService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public ResponseEntity <Owner> save(@RequestBody Owner data){
-      Owner saveResponseAPI = this.ownerService.saveOwner(data);
-      return ResponseEntity.status(HttpStatus.OK).body(saveResponseAPI);
-    };
+    public ResponseEntity<?> create(@RequestBody OwnerCreateRequest req) {
+        try {
+            Owner created = service.create(req);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
 }
