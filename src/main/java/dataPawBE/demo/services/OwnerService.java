@@ -4,46 +4,57 @@ import dataPawBE.demo.dto.OwnerCreateRequest;
 import org.springframework.stereotype.Service;
 import dataPawBE.demo.models.Owner;
 import dataPawBE.demo.repository.IOwnerRepository;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Service
 public class OwnerService {
 
-    private final IOwnerRepository repository;
+    private final IOwnerRepository repo;
 
-    public OwnerService(IOwnerRepository repository) {
-        this.repository = repository;
+    public OwnerService(IOwnerRepository repo) {
+        this.repo = repo;
     }
 
-    public Owner create(OwnerCreateRequest req) {
-        // Validaciones mínimas
-        if (req.ownerName() == null || req.ownerName().trim().length() < 3) {
-            throw new IllegalArgumentException("ownerName is required");
-        }
-        if (req.ownerEmail() == null || !req.ownerEmail().contains("@")) {
-            throw new IllegalArgumentException("ownerEmail is invalid");
-        }
+    public List<Owner> findAll() {
+        return repo.findAll();
+    }
 
-        Owner o = new Owner();
-        o.setOwnerName(req.ownerName().trim());
-        o.setOwnerDni(req.ownerDni());
-        o.setOwnerAddress(req.ownerAddress());
-        o.setOwnerPhone(req.ownerPhone());
-        o.setOwnerEmail(req.ownerEmail().trim().toLowerCase());
-        o.setOwnerCity(req.ownerCity());
-        o.setOwnerSalary(req.ownerSalary());
-        o.setCivilStatus(req.civilStatus());
+    public Owner findById(Integer id) {
+        return repo.findById(id).orElseThrow(() -> new IllegalArgumentException("owner not found"));
+    }
 
-        if (req.dateOfBirth() != null && !req.dateOfBirth().isBlank()) {
-            try {
-                var sdf = new SimpleDateFormat("yyyy-MM-dd");
-                o.setDateOfBirth(sdf.parse(req.dateOfBirth().trim()));
-            } catch (Exception e) {
-                throw new IllegalArgumentException("dateOfBirth must be yyyy-MM-dd");
+    public Owner update(Integer id, OwnerUpdateRequest req) {
+        Owner o = findById(id);
+
+        if (req.ownerName() != null) o.setOwnerName(req.ownerName().trim());
+        if (req.ownerPhone() != null) o.setOwnerPhone(req.ownerPhone());
+        if (req.ownerDni() != null) o.setOwnerDni(req.ownerDni());
+        if (req.ownerAddress() != null) o.setOwnerAddress(req.ownerAddress());
+        if (req.ownerCity() != null) o.setOwnerCity(req.ownerCity());
+        if (req.civilStatus() != null) o.setCivilStatus(req.civilStatus());
+
+        if (req.dateOfBirth() != null) {
+            if (req.dateOfBirth().isBlank()) {
+                o.setDateOfBirth(null);
+            } else {
+                try {
+                    var sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    o.setDateOfBirth(sdf.parse(req.dateOfBirth().trim()));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("dateOfBirth must be yyyy-MM-dd");
+                }
             }
         }
 
-        return repository.save(o);
+        return repo.save(o);
     }
+
+    public void delete(Integer id) {
+        Owner o = findById(id);
+        repo.delete(o);
+    }
+
 }
