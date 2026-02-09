@@ -2,6 +2,7 @@ package dataPawBE.demo.controllers;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import dataPawBE.demo.services.OwnerService;
 @RestController
 @RequestMapping("/api/owners")
 public class OwnerController {
+    @Autowired
 
     private final OwnerService service;
 
