@@ -22,8 +22,6 @@ public class Owner {
     private String ownerAddress;
     @Column(name="owner_phone")
     private String ownerPhone;
-    @Column(name="owner_email", unique = true)
-    private String ownerEmail;
     @Column(name="owner_city")
     private String ownerCity;
     @Column(name="owner_salary")
@@ -33,31 +31,28 @@ public class Owner {
     @Column(name="civil_status")
     private String civilStatus;
 
-    @JsonProperty(access =  JsonProperty.Access.WRITE_ONLY)
-    @Column(name="password_hash", nullable=false)
-    private String passwordHash;
-
-
     // owner a pets
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Pet> pets;
 
+    @OneToOne (optional = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
+
     public Owner() {}
 
     public Owner(Integer id, String ownerName, String ownerDni, String ownerAddress, String ownerPhone,
-            String ownerEmail, String ownerCity, Float ownerSalary, Date dateOfBirth, String civilStatus, String passswordHash,
+          String ownerCity, Float ownerSalary, Date dateOfBirth, String civilStatus,
             List<Pet> pets) {
         this.id = id;
         this.ownerName = ownerName;
         this.ownerDni = ownerDni;
         this.ownerAddress = ownerAddress;
         this.ownerPhone = ownerPhone;
-        this.ownerEmail = ownerEmail;
         this.ownerCity = ownerCity;
         this.ownerSalary = ownerSalary;
         this.dateOfBirth = dateOfBirth;
         this.civilStatus = civilStatus;
-        this.passwordHash = passswordHash;
         this.pets = pets;
     }
 
@@ -101,14 +96,6 @@ public class Owner {
         this.ownerPhone = ownerPhone;
     }
 
-    public String getOwnerEmail() {
-        return ownerEmail;
-    }
-
-    public void setOwnerEmail(String ownerEmail) {
-        this.ownerEmail = ownerEmail;
-    }
-
     public String getOwnerCity() {
         return ownerCity;
     }
@@ -137,16 +124,8 @@ public class Owner {
         return civilStatus;
     }
 
-    public void setCivilStatus(String passwordHash) {
-        this.passwordHash = civilStatus;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setCivilStatus(String civilStatus) {
+        this.civilStatus = civilStatus;
     }
 
     public List<Pet> getPets() {
@@ -155,6 +134,14 @@ public class Owner {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
    
