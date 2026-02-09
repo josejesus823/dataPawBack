@@ -13,7 +13,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/owners")
 public class OwnerController {
-
     @Autowired
     OwnerService service;
 
@@ -38,7 +37,8 @@ public class OwnerController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody OwnerUpdateRequest req) {
         try {
-            return ResponseEntity.ok(service.update(id, req));
+            Owner created = service.create(req);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         }
@@ -54,4 +54,3 @@ public class OwnerController {
         }
     }
 }
-
