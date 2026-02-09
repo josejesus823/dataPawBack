@@ -18,10 +18,6 @@ public class medicalRecordsController {
     @Autowired
     MedicalRecordsService service;
 
-    public void MedicalRecordsController(MedicalRecordsService service) {
-        this.service = service;
-    }
-
     @PostMapping
     public ResponseEntity<medicalRecords> create(@RequestBody MedicalRecordRequest req) {
         medicalRecords created = service.create(req);
