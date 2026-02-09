@@ -1,5 +1,6 @@
 package dataPawBE.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,8 @@ public class Owner {
     private Date dateOfBirth;
     @Column(name="civil_status")
     private String civilStatus;
+
+    @JsonProperty(access =  JsonProperty.Access.WRITE_ONLY)
     @Column(name="password_hash", nullable=false)
     private String passwordHash;
 

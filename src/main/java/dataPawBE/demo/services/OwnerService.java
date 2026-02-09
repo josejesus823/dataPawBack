@@ -3,11 +3,14 @@ package dataPawBE.demo.services;
 import dataPawBE.demo.dto.OwnerCreateRequest;
 import dataPawBE.demo.models.Owner;
 import dataPawBE.demo.repository.IOwnerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 
+@Service
 public class OwnerService {
-
+    @Autowired
     private final IOwnerRepository repository;
 
     public OwnerService(IOwnerRepository repository) {
@@ -25,13 +28,9 @@ public class OwnerService {
 
         Owner o = new Owner();
         o.setOwnerName(req.ownerName().trim());
-        o.setOwnerDni(req.ownerDni());
-        o.setOwnerAddress(req.ownerAddress());
         o.setOwnerPhone(req.ownerPhone());
         o.setOwnerEmail(req.ownerEmail().trim().toLowerCase());
-        o.setOwnerCity(req.ownerCity());
-        o.setOwnerSalary(req.ownerSalary());
-        o.setCivilStatus(req.civilStatus());
+        o.setPasswordHash(req.password());
 
         if (req.dateOfBirth() != null && !req.dateOfBirth().isBlank()) {
             try {
