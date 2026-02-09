@@ -14,12 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 import dataPawBE.demo.models.Vet;
 import dataPawBE.demo.services.VetService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 
 @RestController
 @RequestMapping("/api/v1/vet")
+@Tag (name = "Controlador crud para los servicios de veterinarios")
+
 public class VetController {
     @Autowired
     VetService vetService;
+
+  @Operation (summary = "Servicio para guardar un veterinario")
+  @ApiResponses({
+    @ApiResponse (responseCode = "200", description = "Veterinario guardado exitosamente",
+      content = @Content (schema = @Schema (implementation = Vet.class))
+    ),
+    @ApiResponse (responseCode = "400", description = "datos inválidos en la petición",
+      content = @Content (mediaType = "application/json",
+        examples = @ExampleObject (value = """
+        {"mensaje": "Revisa los campos ingresados"}
+            """) ))
+  })
 
     //Entpoint para activar guardar un vet
     @PostMapping
@@ -34,7 +56,7 @@ public class VetController {
       return ResponseEntity.status(HttpStatus.OK).body(this.vetService.getVetById(id));
     };
 
-    //Entpoit para activar buscar todos vet 
+    //Entpoit para activar  buscar todos vet 
     @GetMapping
     public ResponseEntity <List<Vet>> getAllVets(){
       return ResponseEntity.status(HttpStatus.OK).body(this.vetService.getAllVets());
@@ -46,7 +68,7 @@ public class VetController {
       vetService.deleteVetById(id);
       return ResponseEntity.noContent().build();
     };
-}
+  }
 
     
 
