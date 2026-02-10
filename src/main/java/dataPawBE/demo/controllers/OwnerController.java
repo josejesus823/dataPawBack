@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dataPawBE.demo.dto.OwnerCreateRequest;
+import dataPawBE.demo.dto.OwnerUpdateRequest;
 import dataPawBE.demo.models.Owner;
 import dataPawBE.demo.services.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
