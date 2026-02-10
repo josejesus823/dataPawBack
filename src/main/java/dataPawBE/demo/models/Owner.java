@@ -32,10 +32,11 @@ public class Owner {
     private String civilStatus;
 
     // owner a pets
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Pet> pets;
 
-    @OneToOne (optional = false)
+    @OneToOne (optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 

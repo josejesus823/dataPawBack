@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dataPawBE.demo.dto.OwnerCreateRequest;
 import dataPawBE.demo.models.Owner;
 import dataPawBE.demo.services.OwnerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
-@RequestMapping("/api/owners")
+@RequestMapping("/api/v1/owners")
 public class OwnerController {
     @Autowired
 
@@ -63,4 +64,3 @@ public class OwnerController {
         }
     }
 }
-

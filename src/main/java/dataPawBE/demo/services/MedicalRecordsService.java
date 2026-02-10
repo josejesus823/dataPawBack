@@ -1,48 +1,127 @@
 package dataPawBE.demo.services;
 
-import java.util.List;
-import java.util.Optional;
-
+import dataPawBE.demo.dto.MedicalRecordRequest;
+import dataPawBE.demo.models.Pet;
+import dataPawBE.demo.models.Vet;
+import dataPawBE.demo.models.medicalRecords;
+import dataPawBE.demo.repository.IMedicalRecordsRepository;
+import dataPawBE.demo.repository.IPetRepository;
+import dataPawBE.demo.repository.IVetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import dataPawBE.demo.models.medicalRecords;
-import dataPawBE.demo.repository.IMedicalRecordsRepository;
+
+import java.time.LocalDate;
 
 @Service
 public class MedicalRecordsService {
+
     @Autowired
-    private IMedicalRecordsRepository medicalRecordsRepository;
+    private final IMedicalRecordsRepository repo;
+    private final IPetRepository petRepo;
+    private final IVetRepository vetRepo;
 
-    // Guardar un registro médico
-    public medicalRecords saveMedicalRecords(medicalRecords dataMedicalRecords) {
-        if (dataMedicalRecords.getClinic_name() == null || dataMedicalRecords.getClinic_name().length() < 7) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "The name does not meet the parameters");
-        }
-        if (dataMedicalRecords.getPet() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Error: debe seleccionar una mascota");
-        }
-        return this.medicalRecordsRepository.save(dataMedicalRecords);
+    public MedicalRecordsService(
+            IMedicalRecordsRepository repo,
+            IPetRepository petRepo,
+            IVetRepository vetRepo
+    ) {
+        this.repo = repo;
+        this.petRepo = petRepo;
+        this.vetRepo = vetRepo;
     }
 
-    // Obtener todos los registros médicos
-    public List<medicalRecords> getAllMedicalRecords() {
-        return this.medicalRecordsRepository.findAll();
+    public medicalRecords create(MedicalRecordRequest req) {
+        validate(req);
+
+        Pet pet = petRepo.findById(req.petId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Pet not found"));
+
+        Vet vet = null;
+        if (req.vetId() != null) {
+            vet = vetRepo.findById(req.vetId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Vet not found"));
+        }
+
+        medicalRecords mr = new medicalRecords();
+        mr.setPet(pet);
+        mr.setVet(vet);
+        mr.setClinic_name(req.clinicName().trim());
+        mr.setRecord_type(req.recordType());
+        mr.setDescription(req.description());
+        mr.setSeverity(req.severity());
+        mr.setAttachments_url(req.attachmentsUrl());
+        mr.setNotes(req.notes());
+
+        if (req.recordDate() != null) {
+            try {
+                mr.setRecord_date((req.recordDate()));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "recordDate must be yyyy-MM-dd");
+            }
+        }
+
+        return repo.save(mr);
     }
 
-    // Obtener un registro médico por ID
+    public java.util.List<medicalRecords> getAllMedicalRecords() {
+        return repo.findAll();
+    }
+
     public medicalRecords getMedicalRecordById(Integer id) {
-        Optional<medicalRecords> medicalRecord = this.medicalRecordsRepository.findById(id);
-        if (!medicalRecord.isPresent()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "No existe un registro médico con ese ID");
+        return repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medical record not found"));
+    }
+
+    public medicalRecords update(Integer id, MedicalRecordRequest req) {
+        validate(req);
+
+        medicalRecords mr = getMedicalRecordById(id);
+
+        Pet pet = petRepo.findById(req.petId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Pet not found"));
+
+        Vet vet = null;
+        if (req.vetId() != null) {
+            vet = vetRepo.findById(req.vetId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Vet not found"));
         }
-        return medicalRecord.get();
+
+        mr.setPet(pet);
+        mr.setVet(vet);
+        mr.setClinic_name(req.clinicName().trim());
+        mr.setRecord_type(req.recordType());
+        mr.setDescription(req.description());
+        mr.setSeverity(req.severity());
+        mr.setAttachments_url(req.attachmentsUrl());
+        mr.setNotes(req.notes());
+
+        if (req.recordDate() != null ) {
+            try {
+                mr.setRecord_date((req.recordDate()));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "recordDate must be yyyy-MM-dd");
+            }
+        } else {
+            mr.setRecord_date(null);
+        }
+
+        return repo.save(mr);
+    }
+
+    public void delete(Integer id) {
+        medicalRecords mr = getMedicalRecordById(id);
+        repo.delete(mr);
+    }
+
+    private void validate(MedicalRecordRequest req) {
+        if (req.clinicName() == null || req.clinicName().trim().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "clinicName is required");
+        }
+        if (req.petId() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "petId is required");
+        }
     }
 }
+

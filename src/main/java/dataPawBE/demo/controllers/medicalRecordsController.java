@@ -14,29 +14,40 @@ import org.springframework.web.bind.annotation.RestController;
 import dataPawBE.demo.models.medicalRecords;
 import dataPawBE.demo.services.MedicalRecordsService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/medicalRecords")
 public class medicalRecordsController {
     @Autowired
-    MedicalRecordsService medicalRecordsService;
+    MedicalRecordsService service;
 
      //Entpoint para activar guardar un registro médico
     @PostMapping
-     public ResponseEntity <medicalRecords> save(@RequestBody medicalRecords data){
-      medicalRecords saveResponseAPI = this.medicalRecordsService.saveMedicalRecords(data);
-      return ResponseEntity.status(HttpStatus.OK).body(saveResponseAPI);
-    };
+    public ResponseEntity<medicalRecords> create(@RequestBody MedicalRecordRequest req) {
+        medicalRecords created = service.create(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
 
-    //Entpoit para activar obtener todos los registros médicos 
     @GetMapping
-     public ResponseEntity <List<medicalRecords>> getAllMedicalRecords(){
-      return ResponseEntity.status(HttpStatus.OK).body(this.medicalRecordsService.getAllMedicalRecords());
-    };
+    public List<medicalRecords> getAll() {
+        return service.getAllMedicalRecords();
+    }
 
-    //Entpoit para activar obtener un registro médico por id
-      @GetMapping(value = "/{id}")
-    public ResponseEntity <medicalRecords> getMedicalRecordById(@PathVariable Integer id){
-      return ResponseEntity.status(HttpStatus.OK).body(this.medicalRecordsService.getMedicalRecordById(id));
-    };
+    @GetMapping("/{id}")
+    public medicalRecords getById(@PathVariable Integer id) {
+        return service.getMedicalRecordById(id);
+    }
+
+    @PutMapping("/{id}")
+    public medicalRecords update(@PathVariable Integer id, @RequestBody MedicalRecordRequest req) {
+        return service.update(id, req);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

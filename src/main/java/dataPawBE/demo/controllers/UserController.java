@@ -3,6 +3,7 @@ package dataPawBE.demo.controllers;
 import dataPawBE.demo.dto.ChangeRoleRequest;
 import dataPawBE.demo.models.User;
 import dataPawBE.demo.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +11,11 @@ import java.util.Map;
 
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final UserService service;
+    @Autowired
+    UserService service;
 
     public UserController(UserService service) {
         this.service = service;
