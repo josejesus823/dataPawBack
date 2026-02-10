@@ -14,11 +14,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/v1/petVaccination")
+@Tag (name = "Controlador crud para los servicios de vacunaciones de mascotas")
+
+
 public class PetVaccinationController {
     @Autowired
     PetVaccinationService petVaccinationService;
+
+    @Operation (summary = "Servicio para guardar una vacunación de mascota")
+    @ApiResponses({
+      @ApiResponse (responseCode = "200", description = "Vacunación guardada exitosamente",
+        content = @Content (schema = @Schema (implementation = PetVaccination.class))
+      ),
+      @ApiResponse (responseCode = "400", description = "datos inválidos en la petición",
+        content = @Content (mediaType = "application/json",
+          examples = @ExampleObject (value = """
+          {"mensaje": "Revisa los campos ingresados"}
+              """) ))
+    })
 
     //Entpoint para activar Guardar una vacunación
     @PostMapping
