@@ -37,8 +37,7 @@ public class OwnerController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody OwnerUpdateRequest req) {
         try {
-            Owner created = service.create(req);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            return ResponseEntity.ok(service.update(id, req));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         }
