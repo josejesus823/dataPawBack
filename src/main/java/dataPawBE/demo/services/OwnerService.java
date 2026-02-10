@@ -1,6 +1,7 @@
 package dataPawBE.demo.services;
 
-import dataPawBE.demo.dto.OwnerUpdateRequest;
+import dataPawBE.demo.dto.OwnerCreateRequest;
+import org.springframework.stereotype.Service;
 import dataPawBE.demo.models.Owner;
 import dataPawBE.demo.repository.IOwnerRepository;
 import org.springframework.stereotype.Service;
